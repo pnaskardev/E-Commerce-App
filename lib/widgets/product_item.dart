@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../screens/product_detail.dart';
 class ProductItem extends StatelessWidget 
 {
 
@@ -17,10 +17,21 @@ class ProductItem extends StatelessWidget
       borderRadius: BorderRadius.circular(15),
       child: GridTile
       (
-        child: Image.network
+        child: GestureDetector
         (
-          imageUrl,
-          fit: BoxFit.cover,
+          onTap: ()
+          {
+            Navigator.of(context).pushNamed
+            (
+              ProductDetailScreen.routeName,
+              arguments: id
+            );
+          },
+          child: Image.network
+          (
+            imageUrl,
+            fit: BoxFit.cover,
+          ),
         ),
         footer: GridTileBar
         (
