@@ -1,4 +1,6 @@
-class Product
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+class Product with ChangeNotifier
 {
   final String id;
   final String title;
@@ -16,4 +18,11 @@ class Product
     required this.imageUrl,
     this.isFav=false
   });
+
+  void toogleFavStatus()
+  {
+    isFav=!isFav;
+    notifyListeners();
+  }
+
 }
