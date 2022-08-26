@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ecommerce/screens/product_detail.dart';
 import 'package:ecommerce/screens/products_overview_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import './providers/products_provider.dart';
 
 void main() 
 {
@@ -15,19 +17,23 @@ class MyApp extends StatelessWidget
   @override
   Widget build(BuildContext context) 
   {
-    return MaterialApp
+    return ChangeNotifierProvider
     (
-      title: 'MyShopApp',
-      theme: ThemeData
+      create: (context) => Products(),
+      child: MaterialApp
       (
-          primarySwatch: Colors.deepPurple,
-          textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme)
+        title: 'MyShopApp',
+        theme: ThemeData
+        (
+            primarySwatch: Colors.deepPurple,
+            textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme)
+        ),
+        home: ProductsOverviewScreen(),
+        routes: 
+        {
+          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+        },
       ),
-      home: ProductsOverviewScreen(),
-      routes: 
-      {
-        ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-      },
     );
   }
 }
