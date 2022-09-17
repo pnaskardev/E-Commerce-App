@@ -1,3 +1,4 @@
+import 'package:ecommerce/providers/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/screens/product_detail.dart';
 import 'package:ecommerce/screens/products_overview_screen.dart';
@@ -17,9 +18,19 @@ class MyApp extends StatelessWidget
   @override
   Widget build(BuildContext context) 
   {
-    return ChangeNotifierProvider
+    return MultiProvider
     (
-      create: (context) => Products(),
+      providers: 
+      [
+        ChangeNotifierProvider
+        (
+          create: (context) => Products(),
+        ),
+        ChangeNotifierProvider
+        (
+          create: (context)=>Cart()
+        )
+      ],
       child: MaterialApp
       (
         title: 'MyShopApp',
@@ -33,7 +44,7 @@ class MyApp extends StatelessWidget
         {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
         },
-      ),
+      )
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:ecommerce/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'products.dart';
 
@@ -42,11 +43,16 @@ class Products with ChangeNotifier
     ),
   ];
 
-
   List<Product> get items 
   {
     return [..._items];
   }
+
+  List<Product> get favItems
+  {
+    return _items.where((element) => element.isFav).toList();
+  }
+
 
 
   Product findbyId(String id)
@@ -59,4 +65,9 @@ class Products with ChangeNotifier
     // _items.add(value);
     notifyListeners();
   }
+
+
+  
+
+
 }
