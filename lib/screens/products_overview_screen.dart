@@ -2,6 +2,7 @@
 
 import 'package:ecommerce/providers/cart.dart';
 import 'package:ecommerce/providers/products_provider.dart';
+import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/widgets/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -86,7 +87,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>
               ),
               onPressed: ()
               {
-
+                Navigator.of(context).pushNamed(cartScreen.routeName);
               },
             ),
           ),
