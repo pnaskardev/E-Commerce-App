@@ -66,7 +66,10 @@ class Products with ChangeNotifier
     notifyListeners();
   }
 
-
+  int get ProductLen
+  {
+    return _items.length;
+  }
   
 
 

@@ -30,15 +30,38 @@ class MyApp extends StatelessWidget
         ChangeNotifierProvider
         (
           create: (context)=>Cart()
-        )
+        ),
       ],
+      // ignore: sort_child_properties_last
       child: MaterialApp
       (
         title: 'MyShopApp',
         theme: ThemeData
         (
             primarySwatch: Colors.deepPurple,
-            textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme)
+            textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme),
+            textButtonTheme: TextButtonThemeData
+            (
+              style:ButtonStyle
+              (
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                overlayColor: MaterialStateProperty.resolveWith<Color?>
+                (
+                  (Set<MaterialState> states)
+                  {
+                    if (states.contains(MaterialState.hovered))
+                    {
+                      return Colors.blue.withOpacity(0.04);
+                    }
+                    if (states.contains(MaterialState.focused) ||states.contains(MaterialState.pressed))
+                    {
+                      return Colors.blue.withOpacity(0.12);
+                    }
+                    return null;
+                  }
+                )
+              )
+            ),
         ),
         home: ProductsOverviewScreen(),
         routes: 

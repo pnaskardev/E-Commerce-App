@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './product_item.dart';
 import 'package:ecommerce/providers/products_provider.dart';
-import '../providers/products_provider.dart';
 
 
 class ProductsGrid extends StatelessWidget 
@@ -23,7 +22,8 @@ class ProductsGrid extends StatelessWidget
     return GridView.builder
     (
       padding: const EdgeInsets.all(10.0),
-      itemCount: products.length,
+      // itemCount: products.length,
+      itemCount: Provider.of<Products>(context).ProductLen,
       itemBuilder: (context, index) => ChangeNotifierProvider.value
       (
         value:products[index],
