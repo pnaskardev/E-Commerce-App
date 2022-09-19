@@ -6,15 +6,6 @@ import 'package:ecommerce/providers/products.dart';
 class ProductItem extends StatelessWidget 
 {
 
-  // final String id;
-  // final String title;
-  // final String imageUrl;
-
-  // ProductItem(this.id,this.title,this.imageUrl);
-
-
-
-
   @override
   Widget build(BuildContext context) 
   {
@@ -25,6 +16,7 @@ class ProductItem extends StatelessWidget
         borderRadius: BorderRadius.circular(15),
         child: GridTile
         (
+          // ignore: sort_child_properties_last
           child: GestureDetector
           (
             onTap: ()
@@ -65,9 +57,22 @@ class ProductItem extends StatelessWidget
               onPressed: ()
               {
                 cart.addItem(product.id, product.price, product.title);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar
+                (
+                  content: const Text('Added item to String'), 
+                  duration: const Duration(seconds: 2),
+                  action: SnackBarAction
+                  (
+                    label: 'UNDO', 
+                    onPressed: ()
+                    {
+                      cart.removeSingleItem(product.id);
+                    }
+                  )
+                ));
               }, 
-              icon: const Icon(Icons.shopping_basket_outlined)  
-            ),
+              icon: const Icon(Icons.shopping_basket_outlined)),
           ),
         ),
       );
