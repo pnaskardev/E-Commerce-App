@@ -1,4 +1,5 @@
 import 'package:ecommerce/providers/cart.dart' show Cart;
+import 'package:ecommerce/providers/orders.dart';
 import 'package:ecommerce/widgets/CartItem.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,14 +49,20 @@ class cartScreen extends StatelessWidget
                     // label: Text(cart.totalAmount.toString()),
                     label: Text
                     (
-                      '${cart.totalAmount}',
+                      // ignore: unnecessary_string_interpolations
+                      '${cart.totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(color: Theme.of(context).primaryColorLight),
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
                   TextButton
                   (
-                    onPressed: (){}, 
+                    onPressed: ()
+                    {
+                      Provider.of<Orders>(context,listen: false).addOrder
+                      (cart.items.values.toList(), cart.totalAmount);
+                      cart.clear();
+                    }, 
                     child: const Text
                     (
                       'Order Now',

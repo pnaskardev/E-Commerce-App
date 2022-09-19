@@ -1,5 +1,7 @@
 import 'package:ecommerce/providers/cart.dart';
+import 'package:ecommerce/providers/orders.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
+import 'package:ecommerce/screens/orders_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/screens/product_detail.dart';
 import 'package:ecommerce/screens/products_overview_screen.dart';
@@ -30,6 +32,10 @@ class MyApp extends StatelessWidget
         ChangeNotifierProvider
         (
           create: (context)=>Cart()
+        ),
+        ChangeNotifierProvider
+        (
+          create: (context)=>Orders()
         ),
       ],
       // ignore: sort_child_properties_last
@@ -68,6 +74,7 @@ class MyApp extends StatelessWidget
         {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           cartScreen.routeName:(context) => const cartScreen(),
+          OrdersScreen.routeName:(context) => const OrdersScreen()
         },
       )
     );
