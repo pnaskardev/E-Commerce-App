@@ -34,33 +34,6 @@ class CartItem extends StatelessWidget
       {
         Provider.of<Cart>(context,listen: false).removeItem(productId);
       },
-      confirmDismiss: (direction)
-      {
-        return showDialog(context: context, builder: (ctx)=>AlertDialog
-        (
-          title: const Text('Are you sure'),
-          content: const Text('Do you want to remove the item from cart'),
-          actions:
-          [
-            ElevatedButton
-            (
-              onPressed: ()
-              {
-                Navigator.of(ctx).pop(false);
-              }, 
-              child: const Text('No')
-            ),
-            ElevatedButton
-            (
-              onPressed: ()
-              {
-                Navigator.of(ctx).pop(true);
-              },
-              child: const Text('Yes')
-            ),
-          ],
-        ));
-      },
       background: Container
       (
         color: Theme.of(context).errorColor,
@@ -97,14 +70,13 @@ class CartItem extends StatelessWidget
               child: Padding
               (
                 padding: const EdgeInsets.all(5.0),
-                // ignore: unnecessary_brace_in_string_interps
                 child: FittedBox(child: Text('\$${price}')),
               ),
             ),
-            // ignore: unnecessary_brace_in_string_interps, unnecessary_string_escapes
+            // ignore: unnecessary_brace_in_string_interps
             title: Text('\ ${title}'),
             subtitle: Text('Total:\$${price*quantity}'),
-            // ignore: unnecessary_brace_in_string_interps, unnecessary_string_escapes
+            // ignore: unnecessary_brace_in_string_interps
             trailing: Text('\ ${quantity}x'),
           ),
         ),
