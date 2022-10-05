@@ -25,6 +25,7 @@ class ProductItem extends StatelessWidget
         borderRadius: BorderRadius.circular(15),
         child: GridTile
         (
+          // ignore: sort_child_properties_last
           child: GestureDetector
           (
             onTap: ()
