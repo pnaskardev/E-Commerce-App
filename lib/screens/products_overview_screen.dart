@@ -35,67 +35,70 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>
   {
 
     final productsContainer=Provider.of<Products>(context,listen: false);
-    return Scaffold
+    return SafeArea
     (
-      appBar: AppBar
+      child: Scaffold
       (
-        title: const Text('MyShop'),
-        actions: <Widget> 
-        [
-          PopupMenuButton
-          (
-            onSelected:(FilterOptions selectedValue )
-            {
-              setState(() 
-              {
-                if(selectedValue==FilterOptions.favs)
-                {
-                    _showfavs=true;
-                }
-                else
-                {
-                  _showfavs=false;
-                }
-              });
-            },
-            icon: const Icon(Icons.more_vert),
-            itemBuilder: (_)=>
-            [
-              const PopupMenuItem
-              (
-                child: Text('Only Favs'),
-                value: FilterOptions.favs,
-              ),
-              const PopupMenuItem
-              (
-                child: Text('Show all'),
-                value: FilterOptions.all,
-              ),
-            ]
-          ),
-          Consumer<Cart>
-          (
-            builder: (_, cart, ch) => Badge
+        appBar: AppBar
+        (
+          title: const Text('MyShop'),
+          actions: <Widget> 
+          [
+            PopupMenuButton
             (
-              child: ch!,
-              value: cart.ItemCount.toString(),
-            ),
-            child: IconButton
-            (
-              icon: const Icon
-              (
-                Icons.shopping_cart,
-              ),
-              onPressed: ()
+              onSelected:(FilterOptions selectedValue )
               {
-                Navigator.of(context).pushNamed(cartScreen.routeName);
+                setState(() 
+                {
+                  if(selectedValue==FilterOptions.favs)
+                  {
+                      _showfavs=true;
+                  }
+                  else
+                  {
+                    _showfavs=false;
+                  }
+                });
               },
+              icon: const Icon(Icons.more_vert),
+              itemBuilder: (_)=>
+              [
+                const PopupMenuItem
+                (
+                  child: Text('Only Favs'),
+                  value: FilterOptions.favs,
+                ),
+                const PopupMenuItem
+                (
+                  child: Text('Show all'),
+                  value: FilterOptions.all,
+                ),
+              ]
             ),
-          ),
-        ],
+            Consumer<Cart>
+            (
+              builder: (_, cart, ch) => Badge
+              (
+                child: ch!,
+                value: cart.ItemCount.toString(),
+              ),
+              child: IconButton
+              (
+                icon: const Icon
+                (
+                  Icons.shopping_cart,
+                ),
+                onPressed: ()
+                {
+                  Navigator.of(context).pushNamed(cartScreen.routeName);
+                },
+              ),
+            ),
+          ],
+        ),
+        drawer: const AppDrawer(),
+        body: ProductsGrid(_showfavs),
       ),
-      drawer: const AppDrawer(),
-      body: ProductsGrid(_showfavs),
     );
   }
 }

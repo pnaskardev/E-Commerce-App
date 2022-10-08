@@ -71,7 +71,10 @@ class MyApp extends StatelessWidget
               )
             ),
         ),
-        home: ProductsOverviewScreen(),
+        home: SafeArea
+        (
+          child: ProductsOverviewScreen()
+        ),
         routes: 
         {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
