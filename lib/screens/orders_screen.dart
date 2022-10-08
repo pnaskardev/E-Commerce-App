@@ -15,20 +15,23 @@ class OrdersScreen extends StatelessWidget
 
     final orderData=Provider.of<Orders>(context);
 
-    return Scaffold
+    return SafeArea
     (
-      appBar: AppBar
+      child: Scaffold
       (
-        title: const Text('Your Orders'),
-      ),
-      drawer: const AppDrawer(),
-      body: ListView.builder
-      (
-        itemCount: orderData.orderLen,
-        itemBuilder: ((context, index) 
-        {
-           return OrderItem(order: orderData.orders[index]); 
-        })
+        appBar: AppBar
+        (
+          title: const Text('Your Orders'),
+        ),
+        drawer: const AppDrawer(),
+        body: ListView.builder
+        (
+          itemCount: orderData.orderLen,
+          itemBuilder: ((context, index) 
+          {
+             return OrderItem(order: orderData.orders[index]); 
+          })
+        ),
       ),
     );
   }
