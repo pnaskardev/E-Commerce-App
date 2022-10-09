@@ -38,6 +38,7 @@ class _EditProductScreenState extends State<EditProductScreen>
 
   var _initValue=
   {
+    'id':'',
     'title':'',
     'description':'',
     'price':'',
@@ -51,12 +52,13 @@ class _EditProductScreenState extends State<EditProductScreen>
   {
     if(_isInit==true)
     {
-      final productId=ModalRoute.of(context)!.settings.arguments as String;
-      if(productId!=null)
+      final productId =ModalRoute.of(context)!.settings.arguments as String;
+      if(productId!='')
       {
         _editedProduct=Provider.of<Products>(context,listen: false).findbyId(productId);
         _initValue=
         {
+          'id':_editedProduct.id,
           'title':_editedProduct.title,
           'price':_editedProduct.price.toString(),
           'description':_editedProduct.description,
@@ -110,7 +112,11 @@ class _EditProductScreenState extends State<EditProductScreen>
     _form.currentState!.save();
     if(_editedProduct.id!='')
     {
-      Provider.of<Products>(context,listen: false).updateProduct(_editedProduct.id, _editedProduct);
+      Provider.of<Products>(context,listen: false).updateProduct
+      (
+        _editedProduct.id,
+        _editedProduct
+      );
     }
     else
     {

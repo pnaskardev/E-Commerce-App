@@ -1,5 +1,7 @@
 import 'package:ecommerce/widgets/product_item.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'products.dart';
 
 
@@ -62,7 +64,22 @@ class Products with ChangeNotifier
 
   void addProduct(Product prod) 
   {
-    // _items.add(value);
+    // const url='https://console.firebase.google.com/project/e-commerce-41888/database/e-commerce-41888-default-rtdb/data/~2F/products.json';
+    // http.post
+    // (
+    //   Uri.parse(url),
+    //   body: json.encode
+    //   (
+    //     {
+    //       'title':prod.title,
+    //       'description':prod.description,
+    //       'imageUrl':prod.imageUrl,
+    //       'price':prod.price,
+    //       'isFav':prod.isFav
+    //     }
+    //   )
+    // );
+    // // _items.add(value);
      final newProduct=Product
     (
       id: DateTime.now().toString(), 
