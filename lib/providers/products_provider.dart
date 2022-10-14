@@ -62,37 +62,46 @@ class Products with ChangeNotifier
     return _items.firstWhere((prod) => prod.id==id);
   }
 
-  Future<void> addProduct(Product prod) 
+  Future<void> addProduct(Product prod)  async
   {
-    const url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json';
-    return http.post
-    (
-      Uri.parse(url),
-      body: json.encode
+    const url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json'; 
+    try
+    {
+      final response = await http.post
       (
-        {
-          'title':prod.title,
-          'description':prod.description,
-          'imageUrl':prod.imageUrl,
-          'price':prod.price,
-          'isFav':prod.isFav
-        }
-      )
-    ).then((response)
-      {
-        print(json.decode(response.body));
-        final newProduct=Product
+        Uri.parse(url),
+        body: json.encode
         (
-          id: json.decode(response.body)['name'], 
-          title: prod.title, 
-          description: prod.description, 
-          price: prod.price, 
-          imageUrl: prod.imageUrl
-        );
-        _items.add(newProduct);
-        notifyListeners();
-      });
-    
+          {
+            'title':prod.title,
+            'description':prod.description,
+            'imageUrl':prod.imageUrl,
+            'price':prod.price,
+            'isFav':prod.isFav
+          }
+        )
+      );
+      // since we are using await this line of code is invisibly wrapped in .the block
+      print(json.decode(response.body));
+      final newProduct=Product
+      (
+        id: json.decode(response.body)['name'], 
+        title: prod.title, 
+        description: prod.description, 
+        price: prod.price, 
+        imageUrl: prod.imageUrl
+      );
+      _items.add(newProduct);
+      notifyListeners();
+        
+    }
+    catch(error)
+    {
+      // ignore: avoid_print
+      print(error);
+      // ignore: use_rethrow_when_possible
+      throw error;
+    }
   }
 
   int get ProductLen

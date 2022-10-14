@@ -103,7 +103,7 @@ class _EditProductScreenState extends State<EditProductScreen>
     }
   }
 
-  void _saveForm()
+  Future<void> _saveForm() async
   {
     final isValid=_form.currentState!.validate();
     if(!isValid)
@@ -122,19 +122,52 @@ class _EditProductScreenState extends State<EditProductScreen>
         _editedProduct.id,
         _editedProduct
       );
+      setState(() 
+      {
+        _isLoading=false;  
+      });
+      Navigator.of(context).pop();
     }
     else
     {
-      Provider.of<Products>(context,listen: false)
-      .addProduct(_editedProduct)
-      .then((_)
+      try
+      {
+        await Provider.of<Products>(context,listen: false)
+        .addProduct(_editedProduct);
+      }
+      catch (error)
+      {
+        await showDialog<Null>
+         (
+          context: context, 
+          builder: (ctx)=>
+            AlertDialog
+            (
+              title: const Text('An error has occured'),
+              content: const Text('Something wet wrong'),
+              actions: <Widget>
+              [
+                TextButton
+                (
+                  onPressed: ()
+                  {
+                    Navigator.of(ctx).pop();
+                  }, 
+                  child: const Text('Okay')
+                )
+              ],
+            )
+         );
+      }
+      finally
+      {
+        setState(() 
         {
-          setState(() 
-          {
-            _isLoading=false;  
-          });
-          Navigator.of(context).pop();
+          _isLoading=false;  
         });
+        Navigator.of(context).pop();
+      }
+      
     }
     // print(_editedProduct.title);
     
