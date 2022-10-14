@@ -6,6 +6,7 @@ import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/widgets/app_drawer.dart';
 import 'package:ecommerce/widgets/badge.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../widgets/ProductsGrid.dart';
 
@@ -29,6 +30,41 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>
   
   
   bool _showfavs=false;
+  var _isInit=true;
+  var _isLoading=false;
+  @override
+  void initState() 
+  {
+    // Provider.of<Products>(context).fetchAndSetProducts(); WONT WORK
+    //  below code can also be used as hack around
+    // Future.delayed(Duration.zero).then((_)
+    // {
+    //   Provider.of<Products>(context).fetchAndSetProducts();
+    // });
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies()
+  {
+    if(_isInit==true)
+    {
+      setState(() 
+      {
+        _isLoading=true;  
+      });
+      Provider.of<Products>(context).fetchAndSetProducts().then((_)
+      {
+        setState(() 
+        {
+          _isLoading=false;  
+        });
+      });
+    }
+    _isInit=false;
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) 
@@ -97,7 +133,10 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>
           ],
         ),
         drawer: const AppDrawer(),
-        body: ProductsGrid(_showfavs),
+        body:_isLoading ? const Center
+        (
+          child: CircularProgressIndicator(),
+        ) : ProductsGrid(_showfavs),
       ),
     );
   }
