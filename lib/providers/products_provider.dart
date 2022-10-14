@@ -62,34 +62,37 @@ class Products with ChangeNotifier
     return _items.firstWhere((prod) => prod.id==id);
   }
 
-  void addProduct(Product prod) 
+  Future<void> addProduct(Product prod) 
   {
-    // const url='https://console.firebase.google.com/project/e-commerce-41888/database/e-commerce-41888-default-rtdb/data/~2F/products.json';
-    // http.post
-    // (
-    //   Uri.parse(url),
-    //   body: json.encode
-    //   (
-    //     {
-    //       'title':prod.title,
-    //       'description':prod.description,
-    //       'imageUrl':prod.imageUrl,
-    //       'price':prod.price,
-    //       'isFav':prod.isFav
-    //     }
-    //   )
-    // );
-    // // _items.add(value);
-     final newProduct=Product
+    const url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json';
+    return http.post
     (
-      id: DateTime.now().toString(), 
-      title: prod.title, 
-      description: prod.description, 
-      price: prod.price, 
-      imageUrl: prod.imageUrl
-    );
-    _items.add(newProduct);
-    notifyListeners();
+      Uri.parse(url),
+      body: json.encode
+      (
+        {
+          'title':prod.title,
+          'description':prod.description,
+          'imageUrl':prod.imageUrl,
+          'price':prod.price,
+          'isFav':prod.isFav
+        }
+      )
+    ).then((response)
+      {
+        print(json.decode(response.body));
+        final newProduct=Product
+        (
+          id: json.decode(response.body)['name'], 
+          title: prod.title, 
+          description: prod.description, 
+          price: prod.price, 
+          imageUrl: prod.imageUrl
+        );
+        _items.add(newProduct);
+        notifyListeners();
+      });
+    
   }
 
   int get ProductLen

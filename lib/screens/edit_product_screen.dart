@@ -47,6 +47,7 @@ class _EditProductScreenState extends State<EditProductScreen>
   };
 
   var _isInit=true;
+  var _isLoading=false;
   @override
   void didChangeDependencies() 
   {
@@ -110,6 +111,10 @@ class _EditProductScreenState extends State<EditProductScreen>
       return;
     }
     _form.currentState!.save();
+    setState(() 
+    {
+      _isLoading=true;
+    });
     if(_editedProduct.id!='')
     {
       Provider.of<Products>(context,listen: false).updateProduct
@@ -120,10 +125,19 @@ class _EditProductScreenState extends State<EditProductScreen>
     }
     else
     {
-      Provider.of<Products>(context,listen: false).addProduct(_editedProduct);
+      Provider.of<Products>(context,listen: false)
+      .addProduct(_editedProduct)
+      .then((_)
+        {
+          setState(() 
+          {
+            _isLoading=false;  
+          });
+          Navigator.of(context).pop();
+        });
     }
     // print(_editedProduct.title);
-    Navigator.of(context).pop();
+    
   }
 
   @override
@@ -145,7 +159,12 @@ class _EditProductScreenState extends State<EditProductScreen>
             )
           ],
         ),
-        body: SingleChildScrollView
+        body: _isLoading ? 
+        const Center
+        (
+          child: CircularProgressIndicator(),
+        ) : 
+        SingleChildScrollView
         (
           child: Padding
           (
