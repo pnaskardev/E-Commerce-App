@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:ecommerce/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -145,12 +147,36 @@ class Products with ChangeNotifier
     return _items.length;
   }
   
-  void updateProduct(String id,Product newProduct)
+  Future<void> updateProduct(String id,Product newProduct) async
   {
     final prodIndex=_items.indexWhere((prod)=>prod.id==id);
     if(prodIndex>=0)
     {
       _items[prodIndex]=newProduct;
+
+      try 
+      {
+        final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products/$id.json';
+        print(id);
+        await http.patch
+        (
+          Uri.parse(url),
+          body: json.encode
+          (
+            {
+              'title':newProduct.title,
+              'description':newProduct.description,
+              'imageUrl':newProduct.imageUrl,
+              'price':newProduct.price
+            }
+          )
+        );
+      }catch (e) 
+      {
+        throw e;
+      }
+      
+      notifyListeners();
     }
     else
     {
@@ -160,9 +186,25 @@ class Products with ChangeNotifier
   }
 
 
-  void deleteProduct(String id)
+  Future<void> deleteProduct(String id) async
   {
-    _items.removeWhere((prod)=>prod.id==id);
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products/$id.json';
+    final existingProductindex=_items.indexWhere((prod) => prod.id==id);
+    var existingProduct =_items[existingProductindex];
+    http.delete(Uri.parse(url))
+    .then((response)
+    {
+      if(response.statusCode>=400)
+      {
+        throw Exception();
+      }
+      existingProduct;
+    })
+    .catchError((_)
+    {
+      _items.insert(existingProductindex, existingProduct);
+    });
+    _items.removeAt(existingProductindex);
     notifyListeners();
   }
 
