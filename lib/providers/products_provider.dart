@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:ecommerce/models/http_exception.dart';
 import 'package:ecommerce/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -52,11 +53,11 @@ class Products with ChangeNotifier
     return [..._items];
   }
 
+  List<Product> _favItem=[];
   List<Product> get favItems
   {
     return _items.where((element) => element.isFav).toList();
   }
-
 
 
   Product findbyId(String id)
@@ -85,7 +86,8 @@ class Products with ChangeNotifier
               title: prodData['title'], 
               description: prodData['description'], 
               price: prodData['price'], 
-              imageUrl: prodData['imageUrl']
+              imageUrl: prodData['imageUrl'],
+              isFav: prodData['isFav']
             )
           );
         }
@@ -190,22 +192,17 @@ class Products with ChangeNotifier
   {
     final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products/$id.json';
     final existingProductindex=_items.indexWhere((prod) => prod.id==id);
-    var existingProduct =_items[existingProductindex];
-    http.delete(Uri.parse(url))
-    .then((response)
-    {
-      if(response.statusCode>=400)
-      {
-        throw Exception();
-      }
-      existingProduct;
-    })
-    .catchError((_)
-    {
-      _items.insert(existingProductindex, existingProduct);
-    });
+    var  existingProduct =_items[existingProductindex];
+    final response = await http.delete(Uri.parse(url));
     _items.removeAt(existingProductindex);
     notifyListeners();
+    if(response.statusCode>=400)
+    {
+      throw HttpException(message: 'Could not delete product');
+    }
+    // existingProduct;
+    // _items.insert(existingProductindex, existingProduct);
+    
   }
 
 
