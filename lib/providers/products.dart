@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http; 
 class Product with ChangeNotifier
 {
   final String id;
@@ -19,10 +22,41 @@ class Product with ChangeNotifier
     this.isFav=false
   });
 
-  void toogleFavStatus()
+
+  void _setFavValue(bool newValue)
   {
+    isFav=newValue;
+    notifyListeners();
+  }
+
+  Future <void> toogleFavStatus() async
+  {
+    final oldStatus=isFav;
     isFav=!isFav;
     notifyListeners();
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products/$id.json';
+    try
+    {
+      final response = await http.patch
+      (
+        Uri.parse(url),
+        body: json.encode
+        (
+          {
+            'isFav':isFav
+          }
+        )
+      );
+      if(response.statusCode>=400)
+      {
+        _setFavValue(oldStatus);
+      }
+    }
+    catch(error)
+    {
+      _setFavValue(oldStatus);
+    }
+   
   }
 
 
