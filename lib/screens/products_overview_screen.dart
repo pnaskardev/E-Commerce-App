@@ -44,33 +44,33 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>
     super.initState();
   }
 
-  @override
-  void didChangeDependencies()
-  {
-    if(_isInit==true)
-    {
-      setState(() 
-      {
-        _isLoading=true;  
-      });
-      Provider.of<Products>(context).fetchAndSetProducts().then((_)
-      {
-        setState(() 
-        {
-          _isLoading=false;  
-        });
-      });
-    }
-    _isInit=false;
+  // @override
+  // void didChangeDependencies()
+  // {
+  //   if(_isInit==true)
+  //   {
+  //     setState(() 
+  //     {
+  //       _isLoading=true;  
+  //     });
+  //     Provider.of<Products>(context).fetchAndSetProducts().then((_)
+  //     {
+  //       setState(() 
+  //       {
+  //         _isLoading=false;  
+  //       });
+  //     });
+  //   }
+  //   _isInit=false;
 
-    super.didChangeDependencies();
-  }
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) 
   {
 
-    final productsContainer=Provider.of<Products>(context,listen: false);
+    // final productsContainer=Provider.of<Products>(context,listen: false);
     return SafeArea
     (
       child: Scaffold
@@ -133,31 +133,35 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>
           ],
         ),
         drawer: const AppDrawer(),
-        body:_isLoading ? const Center
-        (
-          child: CircularProgressIndicator(),
-        ) : ProductsGrid(_showfavs),
-
-        // body: FutureBuilder
+        // body:_isLoading ? const Center
         // (
-        //   future: Provider.of<Products>(context).fetchAndSetProducts(),
-        //   builder: (ctx,dataSnapshot)
-        //   {
-        //     if(dataSnapshot.connectionState==ConnectionState.waiting)
-        //     {
-        //       const Center(child: CircularProgressIndicator());
-        //     }
-        //     else if(dataSnapshot.error!=null)
-        //     {
-        //         return const Center(child: Text('an error has occured '),);
-        //     }
-        //     return Consumer<Products>
-        //     (builder: (context, value, child) => 
-        //       ProductsGrid(_showfavs)  
-        //     );
-        //   },
+        //   child: CircularProgressIndicator(),
+        // ) : ProductsGrid(_showfavs),
 
-        // ),
+        body: FutureBuilder
+        (
+          future: Provider.of<Products>(context,listen: false).fetchAndSetProducts(),
+          builder: (ctx,dataSnapshot)
+          {
+            if(dataSnapshot.connectionState==ConnectionState.waiting)
+            {
+              return const Center(child: CircularProgressIndicator());
+            }
+            else if(dataSnapshot.hasError)
+            {
+                return Center(child: Text('aa${dataSnapshot.error}'),);
+            }
+            if(dataSnapshot.hasData)
+            {
+              return const Center(child: Text('there are no products'));
+            }
+            return Consumer<Products>
+            (builder: (ctx, value, child) => 
+              ProductsGrid(_showfavs)  
+            );
+          },
+
+        ),
 
       ),
     );
