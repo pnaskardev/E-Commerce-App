@@ -21,6 +21,8 @@ class OrderItem
     }
   );
 
+  
+
 }
 
 class Orders with ChangeNotifier
@@ -88,41 +90,42 @@ class Orders with ChangeNotifier
     print(json.decode(response.body));
     final List<OrderItem> loadedOrders=[];
     final extractedData = json.decode(response.body) as Map<String,dynamic>;
-    if(extractedData==null)
+    print(response.statusCode);
+    if(response.statusCode==200)
     {
-      print('there are no orders');
-      return;
-    }
-    extractedData.forEach((orderId, orderData) 
-    {
-      loadedOrders.add
-      (
-        OrderItem
+      extractedData.forEach((orderId, orderData) 
+      {
+        loadedOrders.add
         (
-          id: orderId, 
-          amount: orderData['amount'], 
-          products: (orderData['products'] as List <dynamic>)
-          .map
+          OrderItem
           (
-            (item) => 
-              CartItem
-              (
-                id: item['id'], 
-                title: item['title'], 
-                quantity: item['quantity'], 
-                price: item['price']
-              )
-          ).toList(), 
-            dateTime: DateTime.parse
+            id: orderId, 
+            amount: orderData['amount'], 
+            products: (orderData['products'] as List <dynamic>)
+            .map
             (
-              orderData['dateTime']
-            )
-        )
-      );
-    });
-     _orders=loadedOrders.reversed.toList();
-     notifyListeners();
+              (item) => 
+                CartItem
+                (
+                  id: item['id'], 
+                  title: item['title'], 
+                  quantity: item['quantity'], 
+                  price: item['price']
+                )
+            ).toList(), 
+              dateTime: DateTime.parse
+              (
+                orderData['dateTime']
+              )
+          )
+        );
+      });
+      _orders=loadedOrders.reversed.toList();
+      notifyListeners();
+    }
+    else
+    {
+      throw Exception('Failed to load orders');
+    }
   }
- 
-
 }
