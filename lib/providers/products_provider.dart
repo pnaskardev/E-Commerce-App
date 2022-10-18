@@ -73,6 +73,10 @@ class Products with ChangeNotifier
     {
       final response=await http.get(Uri.parse(url));
       final extractedData=json.decode(response.body) as Map<String,dynamic>;
+      if(extractedData==null)
+      {
+        return;
+      }
       final List<Product> loadedProducts=[];
       extractedData.forEach
       (
@@ -97,6 +101,7 @@ class Products with ChangeNotifier
       // print(json.decode(response.body));
     }catch(error)
     {
+      print(error);
       throw error;
     }
     
@@ -175,6 +180,7 @@ class Products with ChangeNotifier
         );
       }catch (e) 
       {
+        print(e);
         throw e;
       }
       

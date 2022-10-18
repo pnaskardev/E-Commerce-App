@@ -137,6 +137,28 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen>
         (
           child: CircularProgressIndicator(),
         ) : ProductsGrid(_showfavs),
+
+        // body: FutureBuilder
+        // (
+        //   future: Provider.of<Products>(context).fetchAndSetProducts(),
+        //   builder: (ctx,dataSnapshot)
+        //   {
+        //     if(dataSnapshot.connectionState==ConnectionState.waiting)
+        //     {
+        //       const Center(child: CircularProgressIndicator());
+        //     }
+        //     else if(dataSnapshot.error!=null)
+        //     {
+        //         return const Center(child: Text('an error has occured '),);
+        //     }
+        //     return Consumer<Products>
+        //     (builder: (context, value, child) => 
+        //       ProductsGrid(_showfavs)  
+        //     );
+        //   },
+
+        // ),
+
       ),
     );
   }

@@ -81,4 +81,48 @@ class Orders with ChangeNotifier
   }
 
 
+  Future<void> fetchAndSetOrders() async
+  {
+    const url='https://e-commerce-41888-default-rtdb.firebaseio.com/orders.json'; 
+    final response= await http.get(Uri.parse(url));
+    print(json.decode(response.body));
+    final List<OrderItem> loadedOrders=[];
+    final extractedData = json.decode(response.body) as Map<String,dynamic>;
+    if(extractedData==null)
+    {
+      print('there are no orders');
+      return;
+    }
+    extractedData.forEach((orderId, orderData) 
+    {
+      loadedOrders.add
+      (
+        OrderItem
+        (
+          id: orderId, 
+          amount: orderData['amount'], 
+          products: (orderData['products'] as List <dynamic>)
+          .map
+          (
+            (item) => 
+              CartItem
+              (
+                id: item['id'], 
+                title: item['title'], 
+                quantity: item['quantity'], 
+                price: item['price']
+              )
+          ).toList(), 
+            dateTime: DateTime.parse
+            (
+              orderData['dateTime']
+            )
+        )
+      );
+    });
+     _orders=loadedOrders.reversed.toList();
+     notifyListeners();
+  }
+ 
+
 }
