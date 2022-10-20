@@ -1,5 +1,6 @@
 import 'package:ecommerce/providers/cart.dart';
 import 'package:ecommerce/providers/orders.dart';
+import 'package:ecommerce/screens/auth_screen.dart';
 import 'package:ecommerce/screens/cart_screen.dart';
 import 'package:ecommerce/screens/edit_product_screen.dart';
 import 'package:ecommerce/screens/orders_screen.dart';
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget
         ),
         home: SafeArea
         (
-          child: ProductsOverviewScreen()
+          child: AuthScreen()
         ),
         routes: 
         {
@@ -82,7 +83,7 @@ class MyApp extends StatelessWidget
           OrdersScreen.routeName:(context) => const OrdersScreen(),
           UserProductsScreen.routeName:(context) => const UserProductsScreen(),
           EditProductScreen.routeName:(context) => const EditProductScreen(),
-          
+          AuthScreen.routeName:(context)=> AuthScreen(),
         },
       )
     );
