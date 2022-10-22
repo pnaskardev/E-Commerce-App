@@ -58,9 +58,9 @@ class AuthScreen extends StatelessWidget
                       child: Container
                       (
                         margin: const EdgeInsets.only(bottom: 20.0),
-                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
-                        transform: Matrix4.rotationZ(-8 * pi / 180)
-                          ..translate(-10.0),
+                        // padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
+                        // transform: Matrix4.rotationZ(-8 * pi / 180)
+                        //   ..translate(-10.0),
                         // ..translate(-10.0),
                         decoration: BoxDecoration
                         (
@@ -92,6 +92,7 @@ class AuthScreen extends StatelessWidget
                             fontWeight: FontWeight.normal
                           ),
                         ),
+                        // child: Icon(),
                       ),
                     ),
                     Flexible
