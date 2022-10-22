@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:ecommerce/models/http_exception.dart';
 import 'package:ecommerce/widgets/product_item.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +46,14 @@ class Products with ChangeNotifier
     // ),
   ];
 
+  final String authToken;
+  Products
+  ({
+    required this.authToken,
+    required List<Product> items
+  }) : _items=items;
+
+
   List<Product> get items 
   {
     return [..._items];
@@ -68,7 +74,7 @@ class Products with ChangeNotifier
 
   Future<void> fetchAndSetProducts() async
   {
-    const url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json'; 
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken'; 
     try
     {
       final response=await http.get(Uri.parse(url));
@@ -109,8 +115,7 @@ class Products with ChangeNotifier
 
   Future<void> addProduct(Product prod)  async
   {
-    const url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json'; 
-    try
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken';    try
     {
       final response = await http.post
       (
@@ -163,8 +168,7 @@ class Products with ChangeNotifier
 
       try 
       {
-        final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products/$id.json';
-        print(id);
+        final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken';        print(id);
         await http.patch
         (
           Uri.parse(url),
@@ -196,7 +200,7 @@ class Products with ChangeNotifier
 
   Future<void> deleteProduct(String id) async
   {
-    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products/$id.json';
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken';
     final existingProductindex=_items.indexWhere((prod) => prod.id==id);
     var  existingProduct =_items[existingProductindex];
     final response = await http.delete(Uri.parse(url));

@@ -1,3 +1,4 @@
+import 'package:ecommerce/auth/auth.dart';
 import 'package:ecommerce/providers/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class ProductItem extends StatelessWidget
   {
     final product=Provider.of<Product>(context);
     final cart=Provider.of<Cart>(context,listen: false);
+    final authData=Provider.of<Auth>(context,listen: false);
     return ClipRRect
       (
         borderRadius: BorderRadius.circular(15),
@@ -50,7 +52,7 @@ class ProductItem extends StatelessWidget
               (
                 onPressed: ()
                 {
-                  product.toogleFavStatus();
+                  product.toogleFavStatus(authData.token);
                 }, 
                 icon:Icon(product.isFav ? Icons.favorite:Icons.favorite_border)
               ),

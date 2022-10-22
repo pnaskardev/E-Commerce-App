@@ -1,3 +1,4 @@
+import 'package:ecommerce/auth/auth.dart';
 import 'package:ecommerce/providers/cart.dart';
 import 'package:ecommerce/providers/orders.dart';
 import 'package:ecommerce/screens/auth_screen.dart';
@@ -30,62 +31,123 @@ class MyApp extends StatelessWidget
       [
         ChangeNotifierProvider
         (
-          create: (context) => Products(),
+          create: (context)=>Auth(),
+        ),
+        ChangeNotifierProxyProvider<Auth,Products>
+        (
+          create: (ctx) => Products(authToken: '',items:[]),
+          update: (ctx, auth, previousProduct) => Products
+            (
+              authToken: auth.token,
+              items: previousProduct==null ? [] : previousProduct.items
+            ),
         ),
         ChangeNotifierProvider
         (
           create: (context)=>Cart()
         ),
-        ChangeNotifierProvider
+        ChangeNotifierProxyProvider<Auth,Orders>
         (
-          create: (context)=>Orders()
+          create: (ctx)=>Orders(authToken: '',orders:[]),
+          update: (ctx,auth,previousOrders)=>Orders
+          (
+            authToken: auth.token,
+            orders: previousOrders==null ? [] : previousOrders.orders
+          ),
         ),
       ],
       // ignore: sort_child_properties_last
-      child: MaterialApp
-      (
-        title: 'MyShopApp',
-        theme: ThemeData
+      child: Consumer<Auth>
+      (builder: (ctx,auth,_)=>
+        MaterialApp
         (
-            primarySwatch: Colors.deepPurple,
-            textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme),
-            textButtonTheme: TextButtonThemeData
-            (
-              style:ButtonStyle
+          title: 'MyShopApp',
+          theme: ThemeData
+          (
+              primarySwatch: Colors.deepPurple,
+              textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme),
+              textButtonTheme: TextButtonThemeData
               (
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                overlayColor: MaterialStateProperty.resolveWith<Color?>
+                style:ButtonStyle
                 (
-                  (Set<MaterialState> states)
-                  {
-                    if (states.contains(MaterialState.hovered))
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+                  overlayColor: MaterialStateProperty.resolveWith<Color?>
+                  (
+                    (Set<MaterialState> states)
                     {
-                      return Colors.blue.withOpacity(0.04);
+                      if (states.contains(MaterialState.hovered))
+                      {
+                        return Colors.blue.withOpacity(0.04);
+                      }
+                      if (states.contains(MaterialState.focused) ||states.contains(MaterialState.pressed))
+                      {
+                        return Colors.blue.withOpacity(0.12);
+                      }
+                      return null;
                     }
-                    if (states.contains(MaterialState.focused) ||states.contains(MaterialState.pressed))
-                    {
-                      return Colors.blue.withOpacity(0.12);
-                    }
-                    return null;
-                  }
+                  )
                 )
-              )
-            ),
-        ),
-        home: SafeArea
-        (
-          child: AuthScreen()
-        ),
-        routes: 
-        {
-          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          cartScreen.routeName:(context) => const cartScreen(),
-          OrdersScreen.routeName:(context) => const OrdersScreen(),
-          UserProductsScreen.routeName:(context) => const UserProductsScreen(),
-          EditProductScreen.routeName:(context) => const EditProductScreen(),
-          AuthScreen.routeName:(context)=> AuthScreen(),
-        },
+              ),
+          ),
+          home: SafeArea
+          (
+            child:auth.isAuth ? ProductsOverviewScreen() : AuthScreen()
+            // child:ProductsOverviewScreen()
+          ),
+          routes: 
+          {
+            ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+            cartScreen.routeName:(context) => const cartScreen(),
+            OrdersScreen.routeName:(context) => const OrdersScreen(),
+            UserProductsScreen.routeName:(context) => const UserProductsScreen(),
+            EditProductScreen.routeName:(context) => const EditProductScreen(),
+          },
+        )
       )
+      // child:MaterialApp
+      //   (
+      //     title: 'MyShopApp',
+      //     theme: ThemeData
+      //     (
+      //         primarySwatch: Colors.deepPurple,
+      //         textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme),
+      //         textButtonTheme: TextButtonThemeData
+      //         (
+      //           style:ButtonStyle
+      //           (
+      //             foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+      //             overlayColor: MaterialStateProperty.resolveWith<Color?>
+      //             (
+      //               (Set<MaterialState> states)
+      //               {
+      //                 if (states.contains(MaterialState.hovered))
+      //                 {
+      //                   return Colors.blue.withOpacity(0.04);
+      //                 }
+      //                 if (states.contains(MaterialState.focused) ||states.contains(MaterialState.pressed))
+      //                 {
+      //                   return Colors.blue.withOpacity(0.12);
+      //                 }
+      //                 return null;
+      //               }
+      //             )
+      //           )
+      //         ),
+      //     ),
+      //     home: SafeArea
+      //     (
+      //       // child:auth.isAuth ? ProductsOverviewScreen() : AuthScreen()
+      //       child:ProductsOverviewScreen()
+      //     ),
+      //     routes: 
+      //     {
+      //       ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+      //       cartScreen.routeName:(context) => const cartScreen(),
+      //       OrdersScreen.routeName:(context) => const OrdersScreen(),
+      //       UserProductsScreen.routeName:(context) => const UserProductsScreen(),
+      //       EditProductScreen.routeName:(context) => const EditProductScreen(),
+      //     },
+      //   ),
     );
   }
 }

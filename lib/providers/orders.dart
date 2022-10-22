@@ -29,6 +29,15 @@ class Orders with ChangeNotifier
 {
   // ignore: prefer_final_fields
   List<OrderItem>_orders=[];
+  final String authToken;
+
+  Orders
+  ({
+    required this.authToken,
+    required List<OrderItem> orders
+  }):_orders=orders;
+
+
   List<OrderItem> get orders
   {
     return _orders;

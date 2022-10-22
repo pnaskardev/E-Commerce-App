@@ -29,12 +29,12 @@ class Product with ChangeNotifier
     notifyListeners();
   }
 
-  Future <void> toogleFavStatus() async
+  Future <void> toogleFavStatus(String token) async
   {
     final oldStatus=isFav;
     isFav=!isFav;
     notifyListeners();
-    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products/$id.json';
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products/$id.json?auth=$token';
     try
     {
       final response = await http.patch
