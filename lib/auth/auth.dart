@@ -6,7 +6,15 @@ class Auth with ChangeNotifier
 {
   String _token='';
   DateTime _expiryDate=DateTime.now();
-  String? _userId;
+  String _userId='';
+ 
+ 
+ 
+ String get userId
+ {
+    return _userId;
+ }
+
 
   bool get isAuth
   {

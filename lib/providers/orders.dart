@@ -30,10 +30,11 @@ class Orders with ChangeNotifier
   // ignore: prefer_final_fields
   List<OrderItem>_orders=[];
   final String authToken;
-
+  final String userId;
   Orders
   ({
     required this.authToken,
+    required this.userId,
     required List<OrderItem> orders
   }):_orders=orders;
 
@@ -51,7 +52,7 @@ class Orders with ChangeNotifier
   Future<void> addOrder(List<CartItem>cartProducts,double total) async
   {
     final timeStamp=DateTime.now();
-    const url='https://e-commerce-41888-default-rtdb.firebaseio.com/orders.json'; 
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';    
     final response= await http.post
     (
       Uri.parse(url),
@@ -94,7 +95,7 @@ class Orders with ChangeNotifier
 
   Future<void> fetchAndSetOrders() async
   {
-    const url='https://e-commerce-41888-default-rtdb.firebaseio.com/orders.json'; 
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/orders/$userId.json?auth=$authToken';
     final response= await http.get(Uri.parse(url));
     print(json.decode(response.body));
     final List<OrderItem> loadedOrders=[];

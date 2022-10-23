@@ -52,7 +52,11 @@ class ProductItem extends StatelessWidget
               (
                 onPressed: ()
                 {
-                  product.toogleFavStatus(authData.token);
+                  product.toogleFavStatus
+                  (
+                    authData.token,
+                    authData.userId
+                  );
                 }, 
                 icon:Icon(product.isFav ? Icons.favorite:Icons.favorite_border)
               ),

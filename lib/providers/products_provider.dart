@@ -1,5 +1,4 @@
 import 'package:ecommerce/models/http_exception.dart';
-import 'package:ecommerce/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -47,9 +46,11 @@ class Products with ChangeNotifier
   ];
 
   final String authToken;
+  final String userId;
   Products
   ({
     required this.authToken,
+    required this.userId,
     required List<Product> items
   }) : _items=items;
 
@@ -72,9 +73,12 @@ class Products with ChangeNotifier
   }
 
 
-  Future<void> fetchAndSetProducts() async
+  Future<void> fetchAndSetProducts([bool filterByUser=false]) async
   {
-    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken'; 
+
+    final filterString=filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+
+    var url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString'; 
     try
     {
       final response=await http.get(Uri.parse(url));
@@ -83,6 +87,9 @@ class Products with ChangeNotifier
       {
         return;
       }
+      url='https://e-commerce-41888-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favouriteResponse = await http.get(Uri.parse(url));
+      final favData=json.decode(favouriteResponse.body);
       final List<Product> loadedProducts=[];
       extractedData.forEach
       (
@@ -97,7 +104,7 @@ class Products with ChangeNotifier
               description: prodData['description'], 
               price: prodData['price'], 
               imageUrl: prodData['imageUrl'],
-              isFav: prodData['isFav']
+              isFav: favData==null ? false : favData[prodId] ?? false
             )
           );
         }
@@ -115,7 +122,8 @@ class Products with ChangeNotifier
 
   Future<void> addProduct(Product prod)  async
   {
-    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken';    try
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken';    
+    try
     {
       final response = await http.post
       (
@@ -127,7 +135,8 @@ class Products with ChangeNotifier
             'description':prod.description,
             'imageUrl':prod.imageUrl,
             'price':prod.price,
-            'isFav':prod.isFav
+            'creatorId':userId
+            // 'isFav':prod.isFav
           }
         )
       );
@@ -168,7 +177,8 @@ class Products with ChangeNotifier
 
       try 
       {
-        final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken';        print(id);
+        final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products.json?auth=$authToken';        
+        print(id);
         await http.patch
         (
           Uri.parse(url),

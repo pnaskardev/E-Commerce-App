@@ -29,22 +29,23 @@ class Product with ChangeNotifier
     notifyListeners();
   }
 
-  Future <void> toogleFavStatus(String token) async
+  Future <void> toogleFavStatus(String token,String userId) async
   {
     final oldStatus=isFav;
     isFav=!isFav;
     notifyListeners();
-    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/products/$id.json?auth=$token';
+    final url='https://e-commerce-41888-default-rtdb.firebaseio.com/userFavorites/$userId/$id.json?auth=$token';
     try
     {
-      final response = await http.patch
+      final response = await http.put
       (
         Uri.parse(url),
         body: json.encode
         (
-          {
-            'isFav':isFav
-          }
+          // {
+          //   'isFav':isFav
+          // }
+          isFav,
         )
       );
       if(response.statusCode>=400)

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:ecommerce/providers/products_provider.dart';
 import 'package:ecommerce/screens/edit_product_screen.dart';
 import 'package:ecommerce/widgets/app_drawer.dart';
@@ -13,68 +15,109 @@ class UserProductsScreen extends StatelessWidget
 
   Future<void>_refreshProducts(BuildContext context) async
   {
-    await Provider.of<Products>(context,listen: false).fetchAndSetProducts();
+    await Provider.of<Products>(context,listen: false).fetchAndSetProducts(true);
   }
 
   @override
   Widget build(BuildContext context) 
   {
-    final productsData=Provider.of<Products>(context,listen: false);
-    return Scaffold
+    // final productsData=Provider.of<Products>(context,listen: false);
+    print('rebuilding...');
+    return SafeArea
     (
-      appBar: AppBar
+      child: Scaffold
       (
-        title: const Text('Your Products'),
-        actions: 
-        [
-          IconButton
-          (
-            onPressed: ()
-            {
-              Navigator.of(context).pushNamed
-              (
-                EditProductScreen.routeName,
-                arguments: ''
-              );
-            }, 
-            icon: const Icon(Icons.add)
-          )
-        ],
-      ),
-      drawer: const AppDrawer(),
-      body: Consumer<Products>
-      (
-        builder: (_, value, child)=>RefreshIndicator
+        appBar: AppBar
         (
-          onRefresh: () => _refreshProducts(context),
-          child: Padding
-          (
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder
+          title: const Text('Your Products'),
+          actions: 
+          [
+            IconButton
             (
-              itemCount: productsData.items.length,
-              itemBuilder: (_,index)
+              onPressed: ()
               {
-                return Column
+                Navigator.of(context).pushNamed
                 (
-                  children: 
-                  [
-                    UserProductItem
-                    (
-                      id: productsData.items[index].id,
-                      imageUrl: productsData.items[index].imageUrl,
-                      title:productsData.items[index].title
-                    ),
-                    const Divider()
-                  ],
+                  EditProductScreen.routeName,
+                  arguments: ''
                 );
-              }
-            ),
-          ),
+              }, 
+              icon: const Icon(Icons.add)
+            )
+          ],
         ),
-
+        drawer: const AppDrawer(),
+        // body: Consumer<Products>
+        // (
+        //   builder: (_, value, child)=>RefreshIndicator
+        //   (
+        //     onRefresh: () => _refreshProducts(context),
+        //     child: Padding
+        //     (
+        //       padding: const EdgeInsets.all(8.0),
+        //       child: ListView.builder
+        //       (
+        //         itemCount: productsData.items.length,
+        //         itemBuilder: (_,index)
+        //         {
+        //           return Column
+        //           (
+        //             children: 
+        //             [
+        //               UserProductItem
+        //               (
+        //                 id: productsData.items[index].id,
+        //                 imageUrl: productsData.items[index].imageUrl,
+        //                 title:productsData.items[index].title
+        //               ),
+        //               const Divider()
+        //             ],
+        //           );
+        //         }
+        //       ),
+        //     ),
+        //   ),
+    
+        // ),
+        body: FutureBuilder
+        (
+          future: _refreshProducts(context),
+          builder: (context, snapshot) => snapshot.connectionState==ConnectionState.waiting ?
+            const Center(child: CircularProgressIndicator(),)
+           : RefreshIndicator
+            (
+              onRefresh: () => _refreshProducts(context),
+              child: Consumer<Products>
+              (
+                builder: (ctx,productsData,_)=> Padding
+                (
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder
+                  (
+                    itemCount: productsData.items.length,
+                    itemBuilder: (_,index)
+                    {
+                      return Column
+                      (
+                        children: 
+                        [
+                          UserProductItem
+                          (
+                            id: productsData.items[index].id,
+                            imageUrl: productsData.items[index].imageUrl,
+                            title:productsData.items[index].title
+                          ),
+                          const Divider()
+                        ],
+                      );
+                    }
+                  ),
+                ),
+              ),
+            ),
+          // ),
+        ),
       ),
-
     );
   }
 }
