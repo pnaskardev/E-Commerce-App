@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:ecommerce/models/http_exception.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 class Auth with ChangeNotifier
@@ -106,5 +107,18 @@ class Auth with ChangeNotifier
     
     
   }
+
+
+
+  void logOut()
+  {
+    _token='';
+    _userId='';
+    _expiryDate=DateTime.now();
+    notifyListeners();
+    // FirebaseAuth
+  }
+
+  
 
 }
